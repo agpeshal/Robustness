@@ -2,9 +2,9 @@
 
 
 
-Here, we implement the Fast Gradient Sign Method (FGSM) and the Projected Gradient Descent to attack neural networks trained on **CIFAR10** and **MNIST** 
+Implemented the Fast Gradient Sign Method (Goodfellow et al) and the Projected Gradient Descent to attack neural networks trained on **CIFAR10** and **MNIST** 
 
-We also defend the network by performed adversarial training
+Also defended the network by performed adversarial training (Aleksander Madry et al)
 
 ### References
 
