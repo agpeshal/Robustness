@@ -1,6 +1,7 @@
 import torch
 from tqdm import tqdm
 
+
 class AdversarialTrainer:
 
     def __init__(self, model, train_loader, test_loader, attacker, loss, epochs, eval_interval, optimizer, device='cpu'):

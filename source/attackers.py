@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+
 import torch
 from torch.nn import CrossEntropyLoss
+
 
 class Attacker(ABC):
 

@@ -1,12 +1,15 @@
 import argparse
+
 import torch
+import torch.nn as nn
+from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
+
 from adversarial_trainer import AdversarialTrainer
-from net.cnn_classifier import CNNClassifier
-from torch.optim import Adam
 from attackers import PGD
-import torch.nn as nn
+from net.cnn_classifier import CNNClassifier
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
