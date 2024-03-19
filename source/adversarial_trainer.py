@@ -26,7 +26,7 @@ class AdversarialTrainer:
         self.device = device
 
     def train(self):
-        for i in range(self.epochs):
+        for i in tqdm(range(self.epochs), desc="Training ..."):
             self.train_epoch_()
 
             if i % self.eval_interval == 0:
