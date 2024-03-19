@@ -10,6 +10,7 @@ from net.cnn_classifier import CNNClassifier
 
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--ckpt', type=str, default=None)
     parser.add_argument("--eps", type=float, default=0.3)
     parser.add_argument("--alpha", type=float, default=2 / 255)
     parser.add_argument("--steps", type=int, default=10)
@@ -35,6 +36,11 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model = CNNClassifier().to(device)
+
+    if args.ckpt is not None:
+        checkpoint = torch.load(args.ckpt, map_location=device)
+        model.load_state_dict(checkpoint)
+
     model.eval()
 
     attacker = PGD(model, args.steps, args.alpha, args.eps, device)
