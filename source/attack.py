@@ -2,7 +2,7 @@ import argparse
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-from adversarial import Adversarial
+from attackers import PGD
 from net.cnn_classifier import CNNClassifier
 
 def parse_args():
@@ -31,14 +31,14 @@ def main():
     model = CNNClassifier().to(device)
     model.eval()
 
-    attacker = Adversarial(model, device=device)
+    attacker = PGD(model, args.steps, args.alpha, args.eps, device)
     correct_adv, correct_org, total = 0, 0, 0
     dataloader = get_dataloader()
 
     for org_img, label in iter(dataloader):
 
         org_pred = torch.argmax(model(org_img).data, dim=1)
-        adv_img = attacker.PGD(org_img, label, args.steps, args.alpha, args.eps)
+        adv_img = attacker.attack(org_img, label)
         output = model(adv_img)
         adv_pred = torch.argmax(output.data, dim=1)
 
