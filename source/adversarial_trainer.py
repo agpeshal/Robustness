@@ -15,6 +15,24 @@ class AdversarialTrainer:
         self.loss = loss
         self.device = device
 
+    def train(self):
+        for i in range(self.epochs):
+            self.train_epoch_()
+
+            if i % self.eval_interval == 0:
+                self.eval()
+
+    def eval(self):
+        self.model.eval()
+        correct, total = 0, 0
+        for images, labels in tqdm(iter(self.test_loader), desc="Evaluating ..."):
+            images = images.to(self.device)
+            labels = labels.to(self.device)
+            predictions = self.predict_(images).detach()
+            correct += (labels == predictions).sum().cpu().numpy()
+            total += len(labels)
+        
+        print("Test accuracy: {:.2f}".format(correct / total * 100.0))
 
     def predict_(self, images):
         return torch.argmax(self.model(images).data, dim=1)
@@ -31,24 +49,3 @@ class AdversarialTrainer:
             loss = self.loss(outputs, labels)
             loss.backward()
             self.optimizer.step()
-
-
-    def train(self):
-        for i in range(self.epochs):
-            self.train_epoch_()
-
-            if i % self.eval_interval == 0:
-                self.eval()
-
-
-    def eval(self):
-        self.model.eval()
-        correct, total = 0, 0
-        for images, labels in tqdm(iter(self.test_loader), desc="Evaluating ..."):
-            images = images.to(self.device)
-            labels = labels.to(self.device)
-            predictions = self.predict_(images).detach()
-            correct += (labels == predictions).sum().cpu().numpy()
-            total += len(labels)
-        
-        print("Test accuracy: {:.2f}".format(correct / total * 100.0))
