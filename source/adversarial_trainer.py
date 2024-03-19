@@ -3,8 +3,18 @@ from tqdm import tqdm
 
 
 class AdversarialTrainer:
-
-    def __init__(self, model, train_loader, test_loader, attacker, loss, epochs, eval_interval, optimizer, device='cpu'):
+    def __init__(
+        self,
+        model,
+        train_loader,
+        test_loader,
+        attacker,
+        loss,
+        epochs,
+        eval_interval,
+        optimizer,
+        device="cpu",
+    ):
         self.model = model
         self.train_loader = train_loader
         self.test_loader = test_loader
@@ -31,14 +41,13 @@ class AdversarialTrainer:
             predictions = self.predict_(images).detach()
             correct += (labels == predictions).sum().cpu().numpy()
             total += len(labels)
-        
+
         print("Test accuracy: {:.2f}".format(correct / total * 100.0))
 
     def predict_(self, images):
         return torch.argmax(self.model(images).data, dim=1)
-    
+
     def train_epoch_(self):
-        
         self.model.train()
         for images, labels in iter(self.train_loader):
             images = images.to(self.device)
