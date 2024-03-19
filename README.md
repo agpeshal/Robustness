@@ -2,66 +2,41 @@
 
 
 
-This repository contains implementation of the Fast Gradient Sign Method (Goodfellow *et al*) and the Projected Gradient Descent (Madry *et al*) to attack neural networks trained on **CIFAR10** and **MNIST** 
+This repository contains implementation of the Projected Gradient Descent (Madry *et al*) which is based on Fast Gradient Sign Method (Goodfellow *et al*) to attack neural networks trained on **CIFAR10** 
 
 Defend the network by performed adversarial training
 
-### File Structure
-
-```bash
-├── Attack
-│   ├── attack.ipynb				# attack definition and execution
-│   ├── cifar_model.pt				# model generated from cifar_model.py
-│   ├── cifar_model.py				# train model on CIFAR10
-│   ├── mnist_model.net				# pre-trained model on MNIST
-│   └── models.py				# model architecture
-├── Defence
-│   ├── attacks.py				# FGSM and PGD (targeted and untargeted) attacks
-│   ├── eval.py					# evaulate model performance
-│   ├── models					# Saved model for different training epochs
-│   │   ├── Net_1_False
-│   │   ├── Net_1_True
-│   │   ├── Net_20_False
-│   │   └── Net_20_True
-│   ├── train.py				# Adversarial training
-│   └── utils.py				# utility functions
+## Installation
+Use [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html) to create a virtual environment and install dependencies
 ```
+conda create -n robust
+conda activate robust
+conda install --file requirements.txt
+```
+
 
 ### Attack
-
+Download model [checkpoint](https://drive.google.com/file/d/1cMzKCL3Woa-oZzz6gQyP-pYYJ-L9tPPw/view?usp=sharing)
+To run PGD attack on model using CIFAR-10 images, run 
 ```bash
-cd Attack
-python cifar_model.py
-jupyter notebook
+cd source
+python attack.py --ckpt {path_to_ckpt}
 ```
-
-Execute cells in ```attack.ipynb``` to load the pre-trained models and data and run attacks
+Some examples of the adversarial images from the attack
 
 ![](images/car_truck.png) ![](images/frog_deer.png) 
 
  
-
-![](images/1to7.png)                    ![](images/7to3.png)
-
 
 
 ### Defense
 
 Use adversarial training as the defense mechanism
 
-```ba
-cd Defense
-python train.py --defense --num_epochs 20
-```
-
-This will train on MNIST and save the model the model as ```models/Net_{args.num_epochs}_{args.defense}``` 
-
-To evaluate the performance before and after adversarial training on attacked and non-attacked images, run the following command
-
 ```bash
-python eval.py --defense --num_epochs 20
+cd source
+python train.py
 ```
-
  
 
 ### References
