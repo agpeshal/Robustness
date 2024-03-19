@@ -9,20 +9,21 @@ class Adversarial:
         self.loss = CrossEntropyLoss()
     
     def FGSM(self, org_img, label, alpha, targeted=False):
+        image = org_img.clone()
         # calculate gradients wrt the image
-        org_img = org_img.to(self.device)
-        org_img.requires_grad = True
+        image = image.to(self.device)
+        image.requires_grad = True
         label = label.to(self.device)
-        loss = self.loss(self.model(org_img), torch.tensor([label], dtype=torch.long))
+        loss = self.loss(self.model(image), torch.tensor([label], dtype=torch.long))
         loss.backward()
 
         # zero model gradients
         self.model.zero_grad()
-        delta = alpha * self.image.grad.sign()
+        delta = alpha * image.grad.sign()
         if targeted:
-            return self.image - delta
+            return image - delta
         else:
-            return self.image + delta
+            return image + delta
     
 
     def PGD(self, org_img, label, steps, alpha=2/255, eps=0.3, targeted=False):
