@@ -15,11 +15,9 @@ class FGSM(Attacker):
         self,
         model: nn.Module,
         alpha: float,
-        device: torch.device,
         targeted: bool = False,
     ) -> None:
-        self.model = model.to(device)
-        self.device = device
+        self.model = model
         self.alpha = alpha
         self.targeted = targeted
 
@@ -31,9 +29,7 @@ class FGSM(Attacker):
         image = org_img.clone()
 
         # calculate gradients wrt the image
-        image = image.to(self.device)
         image.requires_grad = True
-        label = label.to(self.device)
         loss = nn.CrossEntropyLoss()(
             self.model(image), torch.tensor([label], dtype=torch.long)
         )
@@ -58,11 +54,9 @@ class PGD(Attacker):
         steps: int,
         alpha: float = 2 / 255,
         eps: float = 0.3,
-        device: torch.device = torch.device("cpu"),
         targeted=False,
     ) -> None:
-        self.fgsm = FGSM(model, alpha, device, targeted)
-        self.device = device
+        self.fgsm = FGSM(model, alpha, targeted)
         self.steps = steps
         self.alpha = alpha
         self.eps = eps

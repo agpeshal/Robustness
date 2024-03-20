@@ -57,9 +57,7 @@ def main() -> None:
 
     model = CNNClassifier().to(device)
     optimizer = Adam(model.parameters(), lr=args.lr)
-    attacker = PGD(
-        model, steps=args.steps, alpha=args.alpha, eps=args.eps, device=device
-    )
+    attacker = PGD(model, steps=args.steps, alpha=args.alpha, eps=args.eps)
     loss = nn.CrossEntropyLoss()
 
     trainer = AdversarialTrainer(

@@ -48,6 +48,8 @@ def main() -> None:
     dataloader = get_dataloader()
 
     for org_img, label in iter(dataloader):
+        org_img = org_img.to(device)
+        label = label.to(device)
         org_pred = torch.argmax(model(org_img).data, dim=1)
         adv_img = attacker.attack(org_img, label)
         output = model(adv_img)
