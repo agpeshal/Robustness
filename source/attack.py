@@ -4,13 +4,13 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from attackers import PGD
-from net.cnn_classifier import CNNClassifier
+from .attackers import PGD
+from .net.cnn_classifier import CNNClassifier
 
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ckpt', type=str, default=None)
+    parser.add_argument("--ckpt", type=str, default=None)
     parser.add_argument("--eps", type=float, default=0.3)
     parser.add_argument("--alpha", type=float, default=2 / 255)
     parser.add_argument("--steps", type=int, default=10)
@@ -18,7 +18,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_dataloader():
+def get_dataloader() -> DataLoader:
     return DataLoader(
         datasets.CIFAR10(
             "../datasets/cifar10",
@@ -31,7 +31,7 @@ def get_dataloader():
     )
 
 
-def main():
+def main() -> None:
     args = parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

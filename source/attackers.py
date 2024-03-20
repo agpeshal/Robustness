@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 import torch
-from torch.nn import CrossEntropyLoss
+import torch.nn as nn
 
 
 class Attacker(ABC):
@@ -11,13 +11,19 @@ class Attacker(ABC):
 
 
 class FGSM(Attacker):
-    def __init__(self, model, alpha, device="cpu", targeted=False) -> None:
+    def __init__(
+        self,
+        model: nn.Module,
+        alpha: float,
+        device: torch.device,
+        targeted: bool = False,
+    ) -> None:
         self.model = model.to(device)
         self.device = device
         self.alpha = alpha
         self.targeted = targeted
 
-    def attack(self, org_img, label):
+    def attack(self, org_img: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
         # set model in eval mode
         self.model.eval()
 
@@ -28,7 +34,7 @@ class FGSM(Attacker):
         image = image.to(self.device)
         image.requires_grad = True
         label = label.to(self.device)
-        loss = CrossEntropyLoss()(
+        loss = nn.CrossEntropyLoss()(
             self.model(image), torch.tensor([label], dtype=torch.long)
         )
         loss.backward()
@@ -37,6 +43,7 @@ class FGSM(Attacker):
         self.model.zero_grad()
 
         # move in the direction of the sign of the gradient
+        assert image.grad is not None
         delta = self.alpha * image.grad.sign()
         if self.targeted:
             return image - delta
@@ -46,7 +53,13 @@ class FGSM(Attacker):
 
 class PGD(Attacker):
     def __init__(
-        self, model, steps, alpha=2 / 255, eps=0.3, device="cpu", targeted=False
+        self,
+        model: nn.Module,
+        steps: int,
+        alpha: float = 2 / 255,
+        eps: float = 0.3,
+        device: torch.device = torch.device("cpu"),
+        targeted=False,
     ) -> None:
         self.fgsm = FGSM(model, alpha, device, targeted)
         self.device = device
@@ -54,7 +67,7 @@ class PGD(Attacker):
         self.alpha = alpha
         self.eps = eps
 
-    def attack(self, org_img, label):
+    def attack(self, org_img: torch.Tensor, label: torch.Tensor) -> torch.Tensor:
         img_max = org_img + self.eps
         img_min = org_img - self.eps
 

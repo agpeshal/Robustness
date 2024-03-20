@@ -1,20 +1,25 @@
 import torch
+import torch.nn as nn
+from torch.optim import Optimizer
+from torch.utils.data import DataLoader
 from tqdm import tqdm
+
+from .attackers import Attacker
 
 
 class AdversarialTrainer:
     def __init__(
         self,
-        model,
-        train_loader,
-        test_loader,
-        attacker,
-        loss,
-        epochs,
-        eval_interval,
-        optimizer,
-        device="cpu",
-    ):
+        model: nn.Module,
+        train_loader: DataLoader,
+        test_loader: DataLoader,
+        attacker: Attacker,
+        loss: nn.Module,
+        epochs: int,
+        eval_interval: int,
+        optimizer: Optimizer,
+        device: torch.device,
+    ) -> None:
         self.model = model
         self.train_loader = train_loader
         self.test_loader = test_loader
@@ -25,14 +30,14 @@ class AdversarialTrainer:
         self.loss = loss
         self.device = device
 
-    def train(self):
+    def train(self) -> None:
         for i in tqdm(range(self.epochs), desc="Training ..."):
             self.train_epoch_()
 
             if i % self.eval_interval == 0:
                 self.eval()
 
-    def eval(self):
+    def eval(self) -> None:
         self.model.eval()
         correct, total = 0, 0
         for images, labels in tqdm(iter(self.test_loader), desc="Evaluating ..."):
@@ -44,10 +49,10 @@ class AdversarialTrainer:
 
         print("Test accuracy: {:.2f}".format(correct / total * 100.0))
 
-    def predict_(self, images):
+    def predict_(self, images: torch.Tensor) -> torch.Tensor:
         return torch.argmax(self.model(images).data, dim=1)
 
-    def train_epoch_(self):
+    def train_epoch_(self) -> None:
         self.model.train()
         for images, labels in iter(self.train_loader):
             images = images.to(self.device)

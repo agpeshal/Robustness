@@ -2,3 +2,4 @@ __pycache__/
 *.gz
 *ubyte
 datasets/
+.mypy_cache/

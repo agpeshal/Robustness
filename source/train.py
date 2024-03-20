@@ -6,9 +6,9 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from adversarial_trainer import AdversarialTrainer
-from attackers import PGD
-from net.cnn_classifier import CNNClassifier
+from .adversarial_trainer import AdversarialTrainer
+from .attackers import PGD
+from .net.cnn_classifier import CNNClassifier
 
 
 def parse_args():
@@ -28,7 +28,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
