@@ -20,6 +20,19 @@ class AdversarialTrainer:
         optimizer: Optimizer,
         device: torch.device,
     ) -> None:
+        """Trainer for adversarial training on the entire dataset.
+
+        Args:
+            model (nn.Module): Classifier to train
+            train_loader (DataLoader): Train dataloader
+            test_loader (DataLoader): Test dataloader
+            attacker (Attacker): White box adversarial attacker
+            loss (nn.Module): Loss function for classification
+            epochs (int): Total training epochs
+            eval_interval (int): Epoch interval for eval run during training.
+            optimizer (Optimizer): Optimizer to update model weights
+            device (torch.device): Training device. CUDA or CPU.
+        """
         self.model = model
         self.train_loader = train_loader
         self.test_loader = test_loader
@@ -31,6 +44,7 @@ class AdversarialTrainer:
         self.device = device
 
     def train(self) -> None:
+        """Train model for specified epochs with evaluation after fixed intervals."""
         for i in tqdm(range(self.epochs), desc="Training ..."):
             self.train_epoch_()
 
@@ -38,6 +52,7 @@ class AdversarialTrainer:
                 self.eval()
 
     def eval(self) -> None:
+        """Eval current model accuracy on clean samples."""
         self.model.eval()
         correct, total = 0, 0
         for images, labels in tqdm(iter(self.test_loader), desc="Evaluating ..."):
