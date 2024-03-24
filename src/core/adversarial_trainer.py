@@ -46,7 +46,7 @@ class AdversarialTrainer:
     def train(self) -> None:
         """Train model for specified epochs with evaluation after fixed intervals."""
         for i in tqdm(range(self.epochs), desc="Training ..."):
-            self.train_epoch_()
+            self._train_epoch()
 
             if i % self.eval_interval == 0:
                 self.eval()
@@ -58,16 +58,16 @@ class AdversarialTrainer:
         for images, labels in tqdm(iter(self.test_loader), desc="Evaluating ..."):
             images = images.to(self.device)
             labels = labels.to(self.device)
-            predictions = self.predict_(images).detach()
+            predictions = self._predict(images).detach()
             correct += (labels == predictions).sum().cpu().numpy()
             total += len(labels)
 
         print("Test accuracy: {:.2f}".format(correct / total * 100.0))
 
-    def predict_(self, images: torch.Tensor) -> torch.Tensor:
+    def _predict(self, images: torch.Tensor) -> torch.Tensor:
         return torch.argmax(self.model(images).data, dim=1)
 
-    def train_epoch_(self) -> None:
+    def _train_epoch(self) -> None:
         self.model.train()
         for images, labels in iter(self.train_loader):
             images = images.to(self.device)
