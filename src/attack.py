@@ -4,8 +4,8 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from .attackers import PGD
-from .net.cnn_classifier import CNNClassifier
+from core.attackers import PGD
+from models.cnn_classifier import CNNClassifier
 
 
 def parse_args():

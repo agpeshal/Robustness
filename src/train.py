@@ -6,9 +6,9 @@ from torch.optim import Adam
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from .adversarial_trainer import AdversarialTrainer
-from .attackers import PGD
-from .net.cnn_classifier import CNNClassifier
+from core.adversarial_trainer import AdversarialTrainer
+from core.attackers import PGD
+from models.cnn_classifier import CNNClassifier
 
 
 def parse_args():

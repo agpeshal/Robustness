@@ -4,7 +4,7 @@ from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 
-from .attackers import Attacker
+from core.attackers import Attacker
 
 
 class AdversarialTrainer:
