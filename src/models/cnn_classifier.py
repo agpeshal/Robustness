@@ -1,30 +1,18 @@
-import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.fc = nn.Linear(28*28, 200)
-        self.fc2 = nn.Linear(200,10)
 
-    def forward(self, x):
-        x = x.view((-1, 28*28))
-        x = F.relu(self.fc(x))
-        x = self.fc2(x)
-        return x
-
-class ConvNet(nn.Module):
+class CNNClassifier(nn.Module):
     def __init__(self):
-        super(ConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=(5, 5))
+        super(CNNClassifier, self).__init__()
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=(5, 5))
         self.bn1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 32, kernel_size=(5, 5))
         self.bn2 = nn.BatchNorm2d(32)
         self.conv2_drop = nn.Dropout2d(p=0.2)
         self.fc1 = nn.Linear(128, 100)
         self.fc2 = nn.Linear(100, 10)
-        self.conv3 = nn.Conv2d(32, 64, kernel_size=(3, 3))
+        self.conv3 = nn.Conv2d(32, 64, kernel_size=(5, 5))
         self.bn3 = nn.BatchNorm2d(64)
         self.conv4 = nn.Conv2d(64, 64, kernel_size=(3, 3))
         self.bn4 = nn.BatchNorm2d(64)
@@ -49,7 +37,6 @@ class ConvNet(nn.Module):
         x = F.relu(self.conv6(x))
         x = self.bn6(x)
         size = x.size()[1] * x.size()[2] * x.size()[3]
-        # print(size)
         x = x.view(-1, size)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
