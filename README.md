@@ -19,7 +19,7 @@ conda install --file requirements.txt
 Download model [checkpoint](https://drive.google.com/file/d/1cMzKCL3Woa-oZzz6gQyP-pYYJ-L9tPPw/view?usp=sharing)
 To run PGD attack on model using CIFAR-10 images, run 
 ```bash
-cd source
+cd src
 python attack.py --ckpt {path_to_ckpt}
 ```
 Some examples of the adversarial images from the attack
@@ -34,7 +34,7 @@ Some examples of the adversarial images from the attack
 Use adversarial training as the defense mechanism
 
 ```bash
-cd source
+cd src
 python train.py
 ```
  
