@@ -3,11 +3,10 @@ import argparse
 import torch
 import torch.nn as nn
 from torch.optim import Adam
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
 
 from core.adversarial_trainer import AdversarialTrainer
 from core.attackers import PGD
+from data.dataloaders import get_dataloader
 from models.cnn_classifier import CNNClassifier
 
 
@@ -33,27 +32,8 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     batch_size = args.bs
-    train_loader = DataLoader(
-        datasets.CIFAR10(
-            "../datasets/cifar10",
-            train=True,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        shuffle=True,
-        batch_size=batch_size,
-    )
-
-    test_loader = DataLoader(
-        datasets.CIFAR10(
-            "../datasets/cifar10",
-            train=False,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        shuffle=False,
-        batch_size=batch_size,
-    )
+    train_loader = get_dataloader(batch_size=batch_size, train=True, shuffle=True)
+    test_loader = get_dataloader(batch_size=batch_size, train=False, shuffle=False)
 
     model = CNNClassifier().to(device)
     optimizer = Adam(model.parameters(), lr=args.lr)

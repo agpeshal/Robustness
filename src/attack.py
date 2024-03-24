@@ -1,10 +1,9 @@
 import argparse
 
 import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets, transforms
 
 from core.attackers import PGD
+from data.dataloaders import get_dataloader
 from models.cnn_classifier import CNNClassifier
 
 
@@ -16,19 +15,6 @@ def parse_args():
     parser.add_argument("--steps", type=int, default=10)
 
     return parser.parse_args()
-
-
-def get_dataloader() -> DataLoader:
-    return DataLoader(
-        datasets.CIFAR10(
-            "../datasets/cifar10",
-            train=False,
-            download=True,
-            transform=transforms.ToTensor(),
-        ),
-        shuffle=True,
-        batch_size=1,
-    )
 
 
 def main() -> None:
@@ -45,7 +31,7 @@ def main() -> None:
 
     attacker = PGD(model, args.steps, args.alpha, args.eps, device)
     correct_adv, correct_org, total = 0, 0, 0
-    dataloader = get_dataloader()
+    dataloader = get_dataloader(batch_size=1, train=False, shuffle=False)
 
     for org_img, label in iter(dataloader):
         org_img = org_img.to(device)
