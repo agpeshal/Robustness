@@ -59,10 +59,10 @@ def main() -> None:
         correct_org += org_pred == label
         total += 1
 
-    print("Accuracy on original images: {:.2f} %".format(correct_org / total * 100.0))
-    print(
-        "Accuracy on adversarial images: {:.2f} %".format(correct_adv / total * 100.0)
-    )
+    clean_acc = correct_org / total * 100.0
+    adv_acc = correct_adv / total * 100.0
+    print(f"Accuracy on original images: {clean_acc:.2f} %")
+    print(f"Accuracy on adversarial images: {adv_acc:.2f} %")
 
 
 if __name__ == "__main__":

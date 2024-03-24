@@ -61,8 +61,8 @@ class AdversarialTrainer:
             predictions = self._predict(images).detach()
             correct += (labels == predictions).sum().cpu().numpy()
             total += len(labels)
-
-        print("Test accuracy: {:.2f}".format(correct / total * 100.0))
+        accuracy = correct / total * 100.0
+        print(f"Test accuracy: {accuracy:.2f}")
 
     def _predict(self, images: torch.Tensor) -> torch.Tensor:
         return torch.argmax(self.model(images).data, dim=1)
